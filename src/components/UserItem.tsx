@@ -15,7 +15,7 @@ const UserItem: React.FC<UserItemProps> = ({ users, selectUserFunction }) => {
       return (
         <li className="List">
           <div className="List-header">
-            <Link to="/userId">
+            <Link to="/user">
               <h2
                 onClick={() =>
                   selectUserFunction(user.first_name, user.last_name)

@@ -3,6 +3,7 @@ import { Routes, Route } from "react-router-dom";
 import * as faker from "faker";
 import Home from "./components/Home";
 import Navbar from "./components/Navbar";
+import User from "./components/User";
 
 import "./App.css";
 
@@ -51,12 +52,19 @@ function App() {
     return setSelectUser(filteredUsers[0]);
   };
 
+  const clearSelectedUser = () => {
+    return setSelectUser(undefined);
+  };
+
   return (
     <div className="App">
-      <Navbar />
+      <Navbar user={selectUser} />
       <h1>Users liking my App</h1>
       <Routes>
-        <Route path="/user" />
+        <Route
+          path="/user"
+          element={<User user={selectUser} clearUser={clearSelectedUser} />}
+        />
         <Route
           path="/"
           element={

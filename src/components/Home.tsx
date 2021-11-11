@@ -18,7 +18,7 @@ const Home: React.FC<HomeProps> = ({
     <div>
       <UserItem
         users={users}
-        selectUser={selectUser}
+        selectUser={() => {}}
         selectUserFunction={selectUserFunction}
       />
     </div>
