@@ -1,0 +1,11 @@
+.Navbar {
+  display: flex;
+  background-color: burlywood;
+  padding-left: 200px;
+}
+
+.Link {
+  padding: 20px;
+  font-weight: 500;
+  margin-left: 300px;
+}

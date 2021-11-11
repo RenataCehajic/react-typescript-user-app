@@ -1,6 +1,8 @@
 import React, { useState } from "react";
+import { Routes, Route } from "react-router-dom";
 import * as faker from "faker";
 import Home from "./components/Home";
+import Navbar from "./components/Navbar";
 
 import "./App.css";
 
@@ -14,7 +16,7 @@ export type UserType = {
 function generateUsers() {
   let users: UserType[] = [];
 
-  for (let id = 1; id <= 100; id++) {
+  for (let id = 1; id <= 3; id++) {
     let firstName = faker.name.firstName();
     let lastName = faker.name.lastName();
     let email = faker.internet.email();
@@ -35,10 +37,37 @@ function generateUsers() {
 function App() {
   const users = generateUsers();
 
+  const [selectUser, setSelectUser] = useState<UserType>();
+  console.log(selectUser);
+
+  const selectUserFunction = (first_name: string, last_name: string) => {
+    const filteredUsers = users.filter((user) => {
+      if (first_name === user.first_name && last_name === user.last_name) {
+        return true;
+      } else {
+        return false;
+      }
+    });
+    return setSelectUser(filteredUsers[0]);
+  };
+
   return (
     <div className="App">
+      <Navbar />
       <h1>Users liking my App</h1>
-      <Home />
+      <Routes>
+        <Route path="/user" />
+        <Route
+          path="/"
+          element={
+            <Home
+              users={users}
+              selectUser={() => {}}
+              selectUserFunction={selectUserFunction}
+            />
+          }
+        />
+      </Routes>
     </div>
   );
 }
