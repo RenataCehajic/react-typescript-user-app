@@ -14,7 +14,8 @@ export default function User(props: UserProps) {
     <div className="User">
       <div>
         <h2>
-          {props.user?.first_name} {props.user?.last_name}
+          Hi {props.user?.first_name} {props.user?.last_name}! Welcome to my
+          App!
         </h2>
         <Link to="/">
           {props.user === undefined ? (

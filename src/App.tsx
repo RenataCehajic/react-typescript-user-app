@@ -12,23 +12,20 @@ export type UserType = {
   first_name: string;
   last_name: string;
   email: string;
-  birthday: Date;
 };
 function generateUsers() {
   let users: UserType[] = [];
 
-  for (let id = 1; id <= 3; id++) {
+  for (let id = 1; id <= 4; id++) {
     let firstName = faker.name.firstName();
     let lastName = faker.name.lastName();
     let email = faker.internet.email();
-    let birthday = faker.date.between("1950-01-01", "2021-12-31");
 
     users.push({
       id: id,
       first_name: firstName,
       last_name: lastName,
       email,
-      birthday,
     });
   }
 
@@ -59,7 +56,6 @@ function App() {
   return (
     <div className="App">
       <Navbar user={selectUser} />
-      <h1>Users liking my App</h1>
       <Routes>
         <Route
           path="/user"
