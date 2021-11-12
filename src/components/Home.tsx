@@ -8,16 +8,15 @@ type HomeProps = {
   users: UserType[];
   selectUser: () => void;
   selectUserFunction: (first_name: string, last_name: string) => void;
+  addUserToList: (users: UserType[]) => void;
 };
 
 const Home: React.FC<HomeProps> = ({
   users,
   selectUserFunction,
   selectUser,
+  addUserToList,
 }) => {
-  const [addUser, setUser] = useState<UserType[]>([]);
-  console.log(addUser);
-
   return (
     <div>
       <h1>Users liking my App</h1>
@@ -26,7 +25,7 @@ const Home: React.FC<HomeProps> = ({
         selectUser={() => {}}
         selectUserFunction={selectUserFunction}
       />
-      <AddUser users={users} setUser={setUser} />
+      <AddUser addUserToList={addUserToList} users={users} />
     </div>
   );
 };

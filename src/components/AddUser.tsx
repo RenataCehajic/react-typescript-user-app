@@ -4,10 +4,10 @@ import { UserType } from "../App";
 
 interface IProps {
   users: UserType[];
-  setUser: React.Dispatch<React.SetStateAction<UserType[]>>;
+  addUserToList: (users: UserType[]) => void;
 }
 
-const AddUser: React.FC<IProps> = ({ users, setUser }) => {
+const AddUser: React.FC<IProps> = ({ users, addUserToList }) => {
   const [input, setInput] = useState({
     id: "",
     first_name: "",
@@ -27,7 +27,7 @@ const AddUser: React.FC<IProps> = ({ users, setUser }) => {
       return;
     }
 
-    setUser([
+    addUserToList([
       ...users,
       {
         id: parseInt(input.id),
