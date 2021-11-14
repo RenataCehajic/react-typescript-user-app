@@ -7,9 +7,17 @@ type UserItemProps = {
   users: UserType[];
   selectUser: () => void;
   selectUserFunction: (first_name: string, last_name: string) => void;
+  removeUserFromList: (users: UserType[], id: number) => void;
 };
 
-const UserItem: React.FC<UserItemProps> = ({ users, selectUserFunction }) => {
+const UserItem: React.FC<UserItemProps> = ({
+  users,
+  selectUserFunction,
+  removeUserFromList,
+}) => {
+  const onClick = (users: UserType[], id: number): void => {
+    removeUserFromList([...users], id);
+  };
   const renderList = (): JSX.Element[] => {
     return users.map((user) => {
       return (
@@ -26,7 +34,16 @@ const UserItem: React.FC<UserItemProps> = ({ users, selectUserFunction }) => {
             </Link>
           </div>
           <p>{user.email}</p>
-
+          <button
+            className="btn btn-delete"
+            onClick={() => {
+              onClick(users, user.id);
+            }}
+          >
+            <span className="mdi mdi-delete mdi-24px"></span>
+            <span className="mdi mdi-delete-empty mdi-24px"></span>
+            <span>Delete</span>
+          </button>
           {/* <p>{user.birthday}</p> */}
         </li>
       );

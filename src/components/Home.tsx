@@ -9,6 +9,7 @@ type HomeProps = {
   selectUser: () => void;
   selectUserFunction: (first_name: string, last_name: string) => void;
   addUserToList: (users: UserType[]) => void;
+  removeUserFromList: (users: UserType[], id: number) => void;
 };
 
 const Home: React.FC<HomeProps> = ({
@@ -16,6 +17,7 @@ const Home: React.FC<HomeProps> = ({
   selectUserFunction,
   selectUser,
   addUserToList,
+  removeUserFromList,
 }) => {
   return (
     <div>
@@ -24,6 +26,7 @@ const Home: React.FC<HomeProps> = ({
         users={users}
         selectUser={() => {}}
         selectUserFunction={selectUserFunction}
+        removeUserFromList={removeUserFromList}
       />
       <AddUser addUserToList={addUserToList} users={users} />
     </div>

@@ -39,6 +39,7 @@ function App() {
   const [selectUser, setSelectUser] = useState<UserType>();
   console.log(selectUser);
 
+  // ComponentDidMount - why? so your site doesn't rerender every time you render it.
   useEffect((): void => {
     const response = generateUsers();
     setUsers(response);
@@ -56,6 +57,18 @@ function App() {
       } as UserType,
     ];
     return setUsers(newArr);
+  };
+
+  // How to delete a user? Find a user by id with a filter method and if the id matches the user id, don't delete.
+  const removeUserFromList = (users: UserType[], id: number): void => {
+    const removeUser = users.filter((user) => {
+      if (id === user.id) {
+        return false;
+      } else {
+        return true;
+      }
+    });
+    setUsers(removeUser);
   };
 
   const selectUserFunction = (first_name: string, last_name: string) => {
@@ -89,6 +102,7 @@ function App() {
               users={users}
               selectUser={() => {}}
               selectUserFunction={selectUserFunction}
+              removeUserFromList={removeUserFromList}
             />
           }
         />
