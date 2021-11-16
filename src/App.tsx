@@ -13,8 +13,9 @@ export type UserType = {
   first_name: string;
   last_name: string;
   email: string;
-  // birthday: Date;
+  birthday?: Date;
 };
+
 function generateUsers() {
   let users: UserType[] = [];
 
@@ -22,37 +23,93 @@ function generateUsers() {
     let firstName = faker.name.firstName();
     let lastName = faker.name.lastName();
     let email = faker.internet.email();
-    // let birthday = faker.date.between("1950-01-01", "2021-12-31");
+    let birthday = faker.date.between("1950-01-01", "2021-12-31");
 
     users.push({
       id: id,
       first_name: firstName,
       last_name: lastName,
       email,
-      //   birthday,
+      birthday,
     });
   }
 
   return users;
 }
 
-function App() {
+const App = () => {
   const [users, setUsers] = useState<UserType[]>([]);
-  const [selectUser, setSelectUser] = useState<UserType>();
-  console.log(selectUser);
-  const [updatedUser, setUpdateUser] = useState<UserType>();
-  console.log("Updated user is here", updatedUser);
+  const [selectedUser, setSelectedUser] = useState<UserType>();
+  const [userToUpdate, setUserToUpdate] = useState<UserType>();
+  console.log("Hi from user to update", userToUpdate);
 
   // ComponentDidMount - why? so your site doesn't rerender every time you render it.
   useEffect((): void => {
     const response = generateUsers();
     setUsers(response);
-    console.log("What is the response?", response);
+    // console.log("What is the response?", response);
   }, []);
 
   //Tu dobis users iz child component
-  const addUserToList = (users: UserType[]): void => {
-    setUsers(users);
+  const addUserToList = (newUser: UserType): void => {
+    const ListWithAddedUser = [
+      ...users,
+      {
+        id: users.length + 1,
+        first_name: newUser.first_name,
+        last_name: newUser.last_name,
+        email: newUser.email,
+      },
+    ];
+    setUsers(ListWithAddedUser);
+    console.log("addUserList", ListWithAddedUser);
+  };
+
+  //Tu das users iz child component
+  const updateUserFromList = (newUserToUpdate: UserType): void => {
+    //Tu uporabis map zato, da je tip [] isti. Pri find dobis samo en objekt.
+    const ListWithUpdatedUser = users.map((user) => {
+      if (user.id === newUserToUpdate.id) {
+        return {
+          id: newUserToUpdate.id,
+          first_name: newUserToUpdate.first_name,
+          last_name: newUserToUpdate.last_name,
+          email: newUserToUpdate.email,
+        };
+      } else {
+        return user;
+      }
+    });
+    console.log("List with updated user", ListWithUpdatedUser);
+    setUsers(ListWithUpdatedUser);
+    setUserToUpdate(undefined);
+  };
+
+  const selectUserToUpdateFromList = (users: UserType[], id: number) => {
+    const userSelected = users.filter((user) => {
+      if (id === user.id) {
+        return true;
+      } else {
+        return false;
+      }
+    });
+    return setUserToUpdate(userSelected[0]);
+  };
+
+  //als je op edit klikt, gerbuik je deze functue.
+  const selectUserFromList = (users: UserType[], id: number) => {
+    const userSelected = users.filter((user) => {
+      if (id === user.id) {
+        return true;
+      } else {
+        return false;
+      }
+    });
+    return setSelectedUser(userSelected[0]);
+  };
+
+  const clearSelectedUser = () => {
+    return setSelectedUser(undefined);
   };
 
   // How to delete a user? Find a user by id with a filter method and if the id matches the user id, don't delete.
@@ -67,68 +124,33 @@ function App() {
     });
     setUsers(deleteUser);
   };
-  //Tu das users iz child component
-  const updateUser = (users: UserType[]): void => {
-    //Tu uporabis map zato, da je tip [] isti. Pri find dobis samo en objekt.
-    setUsers(users);
-    setUpdateUser(undefined);
-  };
-
-  //als je op edit klikt, gerbuik je deze functue.
-  const updatedUserFunction = (users: UserType[], id: number) => {
-    const updatedUsers = users.filter((user) => {
-      if (id === user.id) {
-        return true;
-      } else {
-        return false;
-      }
-    });
-    return setUpdateUser(updatedUsers[0]);
-  };
-
-  //You select one user with array filter method. You pass the arguments.
-  const selectUserFunction = (first_name: string, last_name: string) => {
-    const filteredUsers = users.filter((user) => {
-      if (first_name === user.first_name && last_name === user.last_name) {
-        return true;
-      } else {
-        return false;
-      }
-    });
-    return setSelectUser(filteredUsers[0]);
-  };
-
-  const clearSelectedUser = () => {
-    return setSelectUser(undefined);
-  };
 
   return (
     <div className="App">
-      <Navbar user={selectUser} />
+      <Navbar user={selectedUser} />
       <Routes>
         <Route
           path="/user"
-          element={<User user={selectUser} clearUser={clearSelectedUser} />}
+          element={<User user={selectedUser} clearUser={clearSelectedUser} />}
         />
         <Route
           path="/"
           element={
             <Home
+              selectedUser={selectedUser}
               addUserToList={addUserToList}
+              userToUpdate={userToUpdate}
               users={users}
-              user={updatedUser}
-              selectUser={() => {}}
-              updatedUser={() => {}}
-              selectUserFunction={selectUserFunction}
+              selectUserToUpdateFromList={selectUserToUpdateFromList}
               deleteUserFromList={deleteUserFromList}
-              updateUser={updateUser}
-              updatedUserFunction={updatedUserFunction}
+              updateUserFromList={updateUserFromList}
+              selectUserFromList={selectUserFromList}
             />
           }
         />
       </Routes>
     </div>
   );
-}
+};
 
 export default App;

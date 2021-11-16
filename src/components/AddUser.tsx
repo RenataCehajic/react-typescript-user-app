@@ -1,5 +1,9 @@
 import React, { useState, useEffect } from "react";
-import { ImportsNotUsedAsValues, InferencePriority } from "typescript";
+import {
+  createModuleResolutionCache,
+  ImportsNotUsedAsValues,
+  InferencePriority,
+} from "typescript";
 import { UserType } from "../App";
 
 // Okay hier maak je de enum
@@ -11,19 +15,19 @@ export enum ActionType {
 }
 
 interface IProps {
-  user?: UserType;
-  users: UserType[];
-  addUserToList: (users: UserType[]) => void;
+  selectedUser?: UserType;
+  userToUpdate?: UserType;
+  addUserToList: (user: UserType) => void;
   type: ActionType;
-  updateUser: (users: UserType[]) => void;
+  updateUserFromList: (user: UserType) => void;
 }
 
 const AddUser: React.FC<IProps> = ({
-  users,
   addUserToList,
-  user,
+  userToUpdate,
+  selectedUser,
   type,
-  updateUser,
+  updateUserFromList,
 }) => {
   // En dan kan je op basis van je enum hier de goede data zetten
   //state aanmaken
@@ -39,16 +43,16 @@ const AddUser: React.FC<IProps> = ({
   //ComponentDidUpdate - zet de user
 
   useEffect(() => {
-    if (user) {
+    if (userToUpdate) {
       setInput({
-        id: `${user.id}`,
-        first_name: user.first_name,
-        last_name: user.last_name,
-        email: user.email,
+        id: `${userToUpdate.id}`,
+        first_name: userToUpdate.first_name,
+        last_name: userToUpdate.last_name,
+        email: userToUpdate.email,
       });
     }
-  }, [user]);
-  console.log("What is user", user);
+  }, [userToUpdate]);
+  console.log("What is user", userToUpdate);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>): void => {
     console.log("Change!", e.target.name, e.target.value);
@@ -63,36 +67,24 @@ const AddUser: React.FC<IProps> = ({
     if (!input.first_name || !input.last_name || !input.email) {
       return;
     }
-
     // Dan kan je hier zeggen if (enum == add){ do addUserToList} else if (enum == update) { updateUser }
     if (type === ActionType.ADDUSER) {
-      addUserToList([
-        ...users,
-        {
-          id: parseInt(input.id),
-          first_name: input.first_name,
-          last_name: input.last_name,
-          email: input.email,
-        },
-      ]);
-      console.log("Add user", user);
+      addUserToList({
+        id: parseInt(input.id),
+        first_name: input.first_name,
+        last_name: input.last_name,
+        email: input.email,
+      });
+      console.log("A dobim?", selectedUser);
     } else if (type === ActionType.EDITUSER) {
+      updateUserFromList({
+        id: parseInt(input.id),
+        first_name: input.first_name,
+        last_name: input.last_name,
+        email: input.email,
+      });
       //ce imas user?, lahko dobis undefined in potem resis z if(user)
       // uporabis map, ker obstojecega userja updates.
-      const newArr = users.map((user) => {
-        if (user.id === parseInt(input.id)) {
-          return {
-            id: parseInt(input.id),
-            first_name: input.first_name,
-            last_name: input.last_name,
-            email: input.email,
-          };
-        } else {
-          return user;
-        }
-      });
-      updateUser(newArr);
-      console.log("updateuser", user);
     }
     setInput({
       id: "",
@@ -104,14 +96,12 @@ const AddUser: React.FC<IProps> = ({
 
   return (
     <div className="AddToList">
-      <input
-        type="number"
-        placeholder="User id"
-        className="AddToList-input"
-        value={input.id}
-        onChange={handleChange}
-        name="id"
-      />
+      {/* <input
+        type="date"
+        onChange={(e) => {
+          console.log(e.target.value);
+        }}
+      /> */}
       <input
         type="text"
         placeholder="First name"

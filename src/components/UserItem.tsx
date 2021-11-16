@@ -4,50 +4,43 @@ import { Link } from "react-router-dom";
 import { UserType } from "../App";
 
 type UserItemProps = {
-  user?: UserType;
+  selectedUser?: UserType;
   users: UserType[];
-  selectUser: () => void;
-  selectUserFunction: (first_name: string, last_name: string) => void;
   deleteUserFromList: (users: UserType[], id: number) => void;
-  updatedUserFunction: (users: UserType[], id: number) => void;
-  updatedUser: () => void;
-  updateUser: (users: UserType[], id: number) => void;
+  selectUserFromList: (users: UserType[], id: number) => void;
+  selectUserToUpdateFromList: (users: UserType[], id: number) => void;
 };
 
 //Here you actually use a function.
 const UserItem: React.FC<UserItemProps> = ({
-  user,
+  selectedUser,
   users,
-  selectUserFunction,
   deleteUserFromList,
-  updatedUserFunction,
-  updatedUser,
-  updateUser,
+  selectUserFromList,
+  selectUserToUpdateFromList,
 }) => {
   const onClick = (users: UserType[], id: number): void => {
     deleteUserFromList([...users], id);
   };
 
   const onChange = (users: UserType[], id: number): void => {
-    updatedUserFunction([...users], id);
+    selectUserToUpdateFromList([...users], id);
   };
 
   const renderList = (): JSX.Element[] => {
     return users.map((user) => {
+      // console.log("User birthday", user.birthday?.getFullYear());
       return (
         <li className="List">
           <div className="List-header">
             <Link to="/user">
-              <h2
-                onClick={() =>
-                  selectUserFunction(user.first_name, user.last_name)
-                }
-              >
+              <h2 onClick={() => selectUserFromList(users, user.id)}>
                 {user.first_name} {user.last_name}
               </h2>
             </Link>
           </div>
           <p>{user.email}</p>
+          <p>Year of Birth: {user.birthday?.getFullYear()}</p>
           <button
             className="btn btn-edit"
             onClick={() => {
