@@ -14,7 +14,7 @@ type HomeProps = {
   selectUserFunction: (first_name: string, last_name: string) => void;
   addUserToList: (users: UserType[]) => void;
   deleteUserFromList: (users: UserType[], id: number) => void;
-  updateUser: (users: UserType[], id: number) => void;
+  updateUser: (users: UserType[]) => void;
   updatedUserFunction: (users: UserType[], id: number) => void;
   updatedUser: () => void;
 };
@@ -49,7 +49,7 @@ const Home: React.FC<HomeProps> = ({
         addUserToList={addUserToList}
         users={users}
         updateUser={updateUser}
-        type={ActionType.ADDUSER}
+        type={user ? ActionType.EDITUSER : ActionType.ADDUSER}
       />
 
       {/*      

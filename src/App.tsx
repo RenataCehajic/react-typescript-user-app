@@ -68,23 +68,13 @@ function App() {
     setUsers(deleteUser);
   };
   //Tu das users iz child component
-  const updateUser = (users: UserType[], id: number): void => {
+  const updateUser = (users: UserType[]): void => {
     //Tu uporabis map zato, da je tip [] isti. Pri find dobis samo en objekt.
-    const updateUser = users.map((user) => {
-      if (id === user.id) {
-        return {
-          id: 1,
-          first_name: "",
-          last_name: "",
-          email: "",
-        } as UserType;
-      } else {
-        return user;
-      }
-    });
-    setUsers(updateUser);
+    setUsers(users);
+    setUpdateUser(undefined);
   };
 
+  //als je op edit klikt, gerbuik je deze functue.
   const updatedUserFunction = (users: UserType[], id: number) => {
     const updatedUsers = users.filter((user) => {
       if (id === user.id) {

@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { InferencePriority } from "typescript";
+import { ImportsNotUsedAsValues, InferencePriority } from "typescript";
 import { UserType } from "../App";
 
 // Okay hier maak je de enum
@@ -15,7 +15,7 @@ interface IProps {
   users: UserType[];
   addUserToList: (users: UserType[]) => void;
   type: ActionType;
-  updateUser: (users: UserType[], id: number) => void;
+  updateUser: (users: UserType[]) => void;
 }
 
 const AddUser: React.FC<IProps> = ({
@@ -36,17 +36,27 @@ const AddUser: React.FC<IProps> = ({
   });
 
   //gebruik je UseEffect voor edit - als de user binnenkomt, zet hem in de state.
-  //ComponentDidUpdate
+  //ComponentDidUpdate - zet de user
 
-  useEffect((): void => {
-    setInput(response);
-  }, []);
+  useEffect(() => {
+    if (user) {
+      setInput({
+        id: `${user.id}`,
+        first_name: user.first_name,
+        last_name: user.last_name,
+        email: user.email,
+      });
+    }
+  }, [user]);
+  console.log("What is user", user);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>): void => {
+    console.log("Change!", e.target.name, e.target.value);
     setInput({
       ...input,
       [e.target.name]: e.target.value,
     });
+    console.log("input", input);
   };
 
   const handleClick = (): void => {
@@ -65,9 +75,24 @@ const AddUser: React.FC<IProps> = ({
           email: input.email,
         },
       ]);
+      console.log("Add user", user);
     } else if (type === ActionType.EDITUSER) {
       //ce imas user?, lahko dobis undefined in potem resis z if(user)
-      if (user) updateUser(users, user.id);
+      // uporabis map, ker obstojecega userja updates.
+      const newArr = users.map((user) => {
+        if (user.id === parseInt(input.id)) {
+          return {
+            id: parseInt(input.id),
+            first_name: input.first_name,
+            last_name: input.last_name,
+            email: input.email,
+          };
+        } else {
+          return user;
+        }
+      });
+      updateUser(newArr);
+      console.log("updateuser", user);
     }
     setInput({
       id: "",
